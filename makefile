@@ -8,7 +8,7 @@ pull:
 
 push: 
 	git add * .gitignore
-	git commit -m "First commit - simple install script added"
+	git commit -m "Update the README"
 	git push origin master	
 
 git: clean push

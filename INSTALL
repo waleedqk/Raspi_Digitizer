@@ -1,0 +1,90 @@
+# Expand the FileSystem
+
+    sudo raspi-config
+
+# Change the Default user password
+
+    sudo passwd pi
+
+# Chenge the hostname of the Pi
+
+1) Edit /etc/hosts
+2) Edit /etc/hostname
+3) Commit Changes 
+4) Reboot
+
+
+## 1) Edit /etc/hosts
+
+At the terminal, type
+
+    sudo nano /etc/hosts
+
+Leave all of the entries alone except for the very last entry labeled 127.0.1.1 with the hostname “raspberrypi“. This is the only line you want to edit. Replace “raspberrypi” with whatever hostname you desire.
+
+
+## 2) Edit /etc/hostname
+
+At the terminal, type
+
+    sudo nano /etc/hostname
+
+This file only contains your current hostname. Replace the default “raspberrypi” with the same hostname you put in the previous step. 
+
+
+## 3) Commit Changes
+
+Commit the changes to the system and reboot the system for the changes to take effect.
+
+    sudo /etc/init.d/hostname.sh
+
+## 4) Rebbot
+
+Rebbot the device:
+
+    sudo reboot
+
+
+# SSH Passwordless Login Using SSH
+
+## 1) Create the .ssh directory on the rasp_pi
+
+    mkdir -p ~/.ssh
+
+## 2) Create a ssh_key from host
+
+Generate a pair of public keys from the host from where you will log into the rasp_pi:
+
+    ssh-keygen -t rsa -b 4096
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ras_pi
+
+## 3) Upload Generated Public Keys to rasp_pi
+
+Use SSH from server (host) and upload new generated public key on server rasp_pi under pi‘s .ssh directory as a file name authorized_keys.
+
+    cat .ssh/id_ras_pi.pub | ssh pi@raspberry.local 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+
+or alternatively 
+
+    ssh-copy-id -i ~/.ssh/id_ras_pi pi@raspberry.local
+
+## 4) Set SSH Permissions on rasp_pi
+
+Due to different SSH versions on servers, we need to set permissions on .ssh directory and authorized_keys file.
+
+    ssh pi@raspberry.local "chmod 700 ~/.ssh; chmod 640 ~/.ssh/authorized_keys"
+
+## 5) SSH login passwordless
+
+SSH into the rasp_pi without having to provide the password:
+
+    ssh pi@raspberry.local
+
+or if key needs to be specified:
+
+    ssh -i ~/.ssh/id_ras_pi pi@raspberry.local
+
+# Install the dependencies for the system
+
+    sudo bash setup/setup.bash
