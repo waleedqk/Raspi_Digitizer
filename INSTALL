@@ -5,17 +5,13 @@
 
     ssh pi@raspiDigitizer1.local
 
-## Change the password
+# Change the Default user password
 
-    sudo passwd pi 
+    sudo passwd pi
 
 # Expand the FileSystem
 
     sudo raspi-config
-
-# Change the Default user password
-
-    sudo passwd pi
 
 # Chenge the hostname to raspiDigitizer
 
