@@ -1,3 +1,14 @@
+# SSH into the Rasp_Pi 
+
+    ssh-keygen -f "/home/wqkhan/.ssh/known_hosts" -R raspberrypi.local
+    ssh pi@raspberrypi.local
+
+    ssh pi@raspiDigitizer1.local
+
+## Change the password
+
+    sudo passwd pi 
+
 # Expand the FileSystem
 
     sudo raspi-config
@@ -6,7 +17,7 @@
 
     sudo passwd pi
 
-# Chenge the hostname of the Pi
+# Chenge the hostname to raspiDigitizer
 
 1) Edit /etc/hosts
 2) Edit /etc/hostname
@@ -63,28 +74,37 @@ Generate a pair of public keys from the host from where you will log into the ra
 
 Use SSH from server (host) and upload new generated public key on server rasp_pi under pi‘s .ssh directory as a file name authorized_keys.
 
-    cat .ssh/id_ras_pi.pub | ssh pi@raspberry.local 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+    cat ~/.ssh/id_ras_pi.pub | ssh pi@raspiDigitizer1.local 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
 
 or alternatively 
 
-    ssh-copy-id -i ~/.ssh/id_ras_pi pi@raspberry.local
+    ssh-copy-id -i ~/.ssh/id_ras_pi pi@raspiDigitizer1.local
 
 ## 4) Set SSH Permissions on rasp_pi
 
 Due to different SSH versions on servers, we need to set permissions on .ssh directory and authorized_keys file.
 
-    ssh pi@raspberry.local "chmod 700 ~/.ssh; chmod 640 ~/.ssh/authorized_keys"
+    ssh pi@raspiDigitizer1.local "chmod 700 ~/.ssh; chmod 640 ~/.ssh/authorized_keys"
 
 ## 5) SSH login passwordless
 
 SSH into the rasp_pi without having to provide the password:
 
-    ssh pi@raspberry.local
+    ssh pi@raspiDigitizer1.local
 
 or if key needs to be specified:
 
-    ssh -i ~/.ssh/id_ras_pi pi@raspberry.local
+    ssh -i ~/.ssh/id_ras_pi pi@raspiDigitizer1.local
+
+
+# Add git repo
+
+    sudo apt-get update
+    sudo apt-get install git
+    mkdir -p ~/Documents/git
+    git clone https://github.com/wqkhan/Raspi_Digitizer.git ~/Documents/git/Raspi_Digitizer
 
 # Install the dependencies for the system
 
+    cd ~/Documents/git/Raspi_Digitizer
     sudo bash setup/setup.bash

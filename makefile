@@ -8,7 +8,7 @@ pull:
 
 push: 
 	git add * .gitignore
-	git commit -m "Update the README"
+	git commit -m "Update the INSTALL procedure"
 	git push origin master	
 
 git: clean push
