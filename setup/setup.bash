@@ -56,7 +56,7 @@ config_dir()
     # Remove unused folders
     rm -rf $MYHOME/Templates
     rm -rf $MYHOME/Examples
-    sudo apt-get purge wolfram-engine -y
+    # sudo apt-get purge wolfram-engine -y
     mkdir -p $MYHOME/Documents/git
     mkdir -p $MYHOME/Downloads
     mkdir -p $MYHOME/Pictures
