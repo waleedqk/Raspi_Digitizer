@@ -13,6 +13,7 @@ APP_LIST=(
     g++
     gcc
     git
+    iperf
     netcat
     nmap
     npm
