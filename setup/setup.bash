@@ -40,7 +40,7 @@ APP_LIST=(
 
 # PIP3 LIST
 PIP3_LIST=(
-	# pytube
+	pytube
 )
 
 APP3_LIST=(
