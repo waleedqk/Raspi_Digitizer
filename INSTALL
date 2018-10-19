@@ -96,7 +96,7 @@ or if key needs to be specified:
 # Add git repo
 
     sudo apt-get update
-    sudo apt-get install git
+    sudo apt-get -y install git
     mkdir -p ~/Documents/git
     git clone https://github.com/wqkhan/Raspi_Digitizer.git ~/Documents/git/Raspi_Digitizer
 
