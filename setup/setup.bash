@@ -25,6 +25,7 @@ APP_LIST=(
     python3-dev
     python-pip
     python3-pip
+    pv
     screen
     ssh
     sshfs
