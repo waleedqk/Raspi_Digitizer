@@ -14,7 +14,7 @@ Listen to data coming in and output the lines from word count via ```wc -l``` an
 
     i=0; while [ 1 ]; do i=$((i+1)); echo $i: $(netcat -l 8888 | wc -l ); done
 
-## Process incoming data with counter and data
+## Process incoming data with counter and date
 
 Listen to data coming in and output the lines from word count via ```wc -l``` and add a counter value to the text and date:
 

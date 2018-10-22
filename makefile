@@ -8,7 +8,7 @@ pull:
 
 push: 
 	git add * .gitignore
-	git commit -m "Update the INSTALL procedure"
+	git commit -m "bash scripts for running experiments with flags. scp repo to pi script as added."
 	git push origin master	
 
 git: clean push

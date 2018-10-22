@@ -7,8 +7,6 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
 MYHOME="/home/${SUDO_USER}"
 PAYLOAD_DIR="${MYHOME}/Downloads/payload"
-PIHOME="/home/pi"
-PI_PAYLOAD_DIR="${PIHOME}/Downloads/payload"
 
 OPTS=`getopt -o c:l:h --long config:,load:,help -n 'parse-options' -- "$@"`
 
@@ -117,15 +115,10 @@ run_experiment()
     esac
 
     case "$CONFIG_VAL" in
-        1)  echo "Single sender only"
-            # delete exiting dat files from the pi
-            ssh -i ~/.ssh/id_ras_pi pi@raspiDigitizer3.local "rm -rf ${PI_PAYLOAD_DIR}/*.dat"
-            # Copy payload file to single sender
-            scp -r -i ~/.ssh/id_ras_pi ${PAYLOAD_DIR}/*.dat pi@raspiDigitizer3.local:Downloads/payload
+        1)  echo  "Copy payload file to single sender"
+            $(scp -r -i ~/.ssh/id_ras_pi ${PAYLOAD_DIR}/*.dat pi@raspiDigitizer3.local:Downloads/payload)
             # get the sender to send the file
-            # $(ssh -i ~/.ssh/id_ras_pi pi@raspiDigitizer3.local "while [ 1 ]; do sleep 0.1; netcat -N raspiDigitizer1 8888 < /home/pi/Downloads/payload/payload51kb.dat ; done")
-            ssh -i ~/.ssh/id_ras_pi pi@raspiDigitizer3.local '(/home/pi/Documents/git/Raspi_Digitizer/DoF/sender.bash -d raspiDigitizer1 -p 8888 > /dev/null 2>&1 &)&'
-            # $(ssh -i ~/.ssh/id_ras_pi pi@raspiDigitizer3.local 'sudo bash -s' < sender.bash ${cmd})
+            $(ssh -i ~/.ssh/id_ras_pi pi@raspiDigitizer3.local "while [ 1 ]; do sleep 0.1; netcat -N raspiDigitizer1 8888 < /home/pi/Downloads/payload/payload51kb.dat ; done")
             # get the reciever to listen at the specified port for the payload
 
             ;;
@@ -146,6 +139,8 @@ run_experiment()
 
 main()
 {
+   
+
     # -z string True if the string is null (an empty string)
     if [ ! -z "${HELP}" ]; then
         echo "Requesting help: "
