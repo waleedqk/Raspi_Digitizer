@@ -59,11 +59,11 @@ config_dir()
     rm -rf $MYHOME/Templates
     rm -rf $MYHOME/Examples
     # sudo apt-get purge wolfram-engine -y
-    mkdir -p $MYHOME/Documents/git
-    mkdir -p $MYHOME/Downloads
-    mkdir -p $MYHOME/Pictures
-    mkdir -p $MYHOME/Videos
-    mkdir -p $MYHOME/Music
+    sudo -u ${SUDO_USER} mkdir -p $MYHOME/Documents/git
+    sudo -u ${SUDO_USER} mkdir -p $MYHOME/Downloads/payload
+    sudo -u ${SUDO_USER} mkdir -p $MYHOME/Pictures
+    sudo -u ${SUDO_USER} mkdir -p $MYHOME/Videos
+    sudo -u ${SUDO_USER} mkdir -p $MYHOME/Music
 }
 
 apt_update()
@@ -146,12 +146,12 @@ main()
     echo "Initializing fresh install" 
 
     config_dir
-    apt_update
-    install_app
-    install_python_modules
-    vim_config
-    tmux_config
-    wireshark_config
+    # apt_update
+    # install_app
+    # install_python_modules
+    # vim_config
+    # tmux_config
+    # wireshark_config
 }
 
 main
