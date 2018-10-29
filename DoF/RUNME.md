@@ -11,3 +11,8 @@ The laptop is connected to the same switch/router as the rasp_pi. Figure out whi
 SSH into the required devices:
 
     ssh -i ~/.ssh/id_ras_pi pi@raspiDigitizer1.local
+
+
+## On the Digitizer PC
+
+    acquire_to_disk 50 800mv 20 <file-name>
