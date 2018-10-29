@@ -8,7 +8,7 @@ pull:
 
 push: 
 	git add * .gitignore
-	git commit -m "bash scripts for running experiments with flags. scp repo to pi script as added."
+	git commit -m "Create analysis folder to process the bin logs"
 	git push origin master	
 
 git: clean push
