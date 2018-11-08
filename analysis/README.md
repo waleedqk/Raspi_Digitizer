@@ -17,3 +17,12 @@ at the location ```esg-share/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLog
 These are binary files approximately 2 GB in seize each. This section of the repo is dedicated to analysing the data in a meaningful way. 
 
 All effort should be made that the scripts are well commented and their purpose is clear.
+
+
+### 01_Loading_Data/
+
+**00_binData_to_text.py**
+
+    Loads all files in the specifed folder location "assumes they are bin files"
+    processed the data and transforms them to an array with time and value
+    then saves that to a text file in the output folder location

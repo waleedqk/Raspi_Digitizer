@@ -17,12 +17,10 @@ Close netcat once the command has ended
 
 Call netcat -N <ip> <port> <  <what_file_to_send>
 
-    netcat raspiDigitizer6 8888 < payload.dat
+    netcat -N raspiDigitizer6 8888 < payload.dat
 
 
-
-
-## Netcat send 
+## Netcat send
 
 Call netcat <ip> <port> <  <what_file_to_send>
 

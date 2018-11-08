@@ -17,11 +17,24 @@ Files are always stored under:
 
     /Digitizer/captured-data/<file-name>
 
-## 16-bit values 
+## Bin to actual Voltage values
 
-0 - 65535
+The encoding is as 16-bit values.
+So firstly load as unit16 to so it maps all values from 0 - 65535
 
-subtract 32768
+alsazar documentation require the subtraction of 2**15 = 32768 from the recorded values
+
+    value = binData_uint16 - (2**15)
+
+**Note** Make sure this arethimatic does not cause an overflow or the output values will be wrong
+now the data is scaled from 32767 - -32768
+
+do a liner approximation based on what the recorded voltage scale was
+if data was collected at 800 mV range then multiplying by 800 will give voltage in mV
+to get value in V, multiple by 0.8
+then divide the value by the scale (2**15) to get the final output
+
+    value_in_mV = (value * 800.0) / (2**15)
 
 # Split files:
 
