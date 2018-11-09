@@ -40,6 +40,8 @@ On the digitizer side, the plan is to capture 20 seconds of data per experiment 
 
     acquire_to_disk 50 800mv 20 <file-name>
 
+The files are saved to ```/Digitizer/captured-data/```
+
 To see how the digitzer is run and how to access and manipulate the data look at ```software_setup.md``` readme
 
 
