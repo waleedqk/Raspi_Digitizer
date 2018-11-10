@@ -1,8 +1,5 @@
 """
-The code takes in a csv file that has two columns, comma seperated
-One column is time the second is the voltage value recorded by the digitizer
 
-The function takes in the csv file and plots it both as a png and as an interactive html file
 """
 import os, sys, time
 import re

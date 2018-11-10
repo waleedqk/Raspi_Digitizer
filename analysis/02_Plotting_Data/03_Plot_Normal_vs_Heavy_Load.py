@@ -1,7 +1,6 @@
 """
-The code takes in a csv file that has two columns, comma seperated
-One column is time the second is the voltage value recorded by the digitizer
-
+The code takes in a csv file that has a column for voltage value recorded by the digitizer
+The function asks for two such files and loads the values fro them
 The function takes in the csv file and plots it both as a png and as an interactive html file
 """
 import os, sys, time

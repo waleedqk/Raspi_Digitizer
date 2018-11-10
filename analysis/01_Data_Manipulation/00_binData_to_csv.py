@@ -1,7 +1,4 @@
 '''
-The data collected by the experiments is a bin file
-that has 16 bit values in a sequence
-
 REFERENCES:
 https://stackoverflow.com/questions/15192847/saving-arrays-as-columns-with-np-savetxt
 '''
@@ -18,15 +15,12 @@ SCRIPT_DIR = sys.path[0]
 SCRIPT_NAME = str(sys.argv[0]).split("/")[-1]
 FILE_NAME =  os.path.basename(sys.argv[0])
 HOME = os.environ['HOME']
+COMPUTE1_HOME = "/rhome/wqkhan"
 
-# if running on the local machine use these directories
-BINDATA_DIR = "/mnt/esg-share/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogs"
-BIN2TXT_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSV"
-
-
-# if running on compute1 use these directories
-BINDATA_DIR = "/rhome/wqkhan/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogs"
-BIN2TXT_DIR = "/rhome/wqkhan/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSV"
+# Location of where the bin data is stored
+BINDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogs"
+# Output location of where the csv data is - the file has a single column with a header
+CSVDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSV"
 
 
 def loadBin_savetocsv(log_folder, outputFolder):
@@ -35,6 +29,9 @@ def loadBin_savetocsv(log_folder, outputFolder):
     :param log_folder: absolute path to where the test logs are stored
     :param outputFolder:
     :return:
+
+    The data collected by the experiments is a bin file
+    that has 16 bit values in a sequence
 
     Loads all files in the specifed folder location "assumes they are bin files"
     processed the data and transforms them to an array with time and value
@@ -110,4 +107,4 @@ if __name__ == '__main__':
 
     print("Starting script {}".format(FILE_NAME))
 
-    loadBin_savetocsv(log_folder=BINDATA_DIR, outputFolder=BIN2TXT_DIR)
+    loadBin_savetocsv(log_folder=BINDATA_DIR, outputFolder=CSVDATA_DIR)
