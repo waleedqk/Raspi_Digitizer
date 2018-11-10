@@ -43,7 +43,7 @@ def decimatedata(dataFolder, outputFolder):
     # The downsampling factor
     q = 10
 
-    csvFiles = sorted(glob.glob(dataFolder + "/*temp.csv"))
+    csvFiles = sorted(glob.glob(dataFolder + "/*.csv"))
 
     for csvFile in csvFiles:
 
@@ -62,16 +62,25 @@ def decimatedata(dataFolder, outputFolder):
         df = pd.read_csv(csvFile,
                          sep=",",
                          # nrows=samplesToPlot,
-                         # index=False,
                          usecols=['Voltage(mV)'],
                          )
 
         samplesToPlot = len(df)
 
-        dff = scipy.signal.decimate(df['Voltage(mV)'].values, q, ftype='fir')
+        # decimate the column values with the specified factor
+        # the return value is a numpy.array
+        # cast it to a pandas dataframe
+        dff = pd.DataFrame(data=scipy.signal.decimate(df['Voltage(mV)'].values, q, ftype='fir'),
+                           columns=['Voltage(mV)'],
+                           )
 
-        pass
-        # df.to_csv(outputFolder + "/" + file_name + "_voltage-mV_decimate.csv", index=False, header=True)
+        # print(df['Voltage(mV)'].mean())
+        # print(dff.mean())
+        del df
+        # print(dff)
+        # print(type(dff))
+
+        dff.to_csv(outputFolder + "/" + file_name + "_voltage-mV_decimate_{}.csv".format(q), index=False, header=True)
 
 
 
