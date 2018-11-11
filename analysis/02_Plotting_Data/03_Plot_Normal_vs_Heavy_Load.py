@@ -23,7 +23,8 @@ import plotly.graph_objs as go
 Plot the voltage recorded from the digitizer from a no-data send trace and a heavy data send trace to see the difference in power consumption
 
 Example run:
-python3 03_Plot_Normal_vs_Heavy_Load.py -n 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV.csv -c 2018-10-23-1029--50MSPS--800mV--Raspi_Digitizer_l4_c2_10MBmaxFlow_dualSender_voltage-mV.csv -s 10000
+python3 03_Plot_Normal_vs_Heavy_Load.py -n 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV_voltage-mV_decimate_10.csv -c 2018-10-23-1029--50MSPS--800mV--Raspi_Digitizer_l4_c2_10MBmaxFlow_dualSender_voltage-mV_voltage-mV_decimate_10.csv -s 3000000 
+python3 03_Plot_Normal_vs_Heavy_Load.py -n 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV_voltage-mV_decimate_10.csv -c 2018-11-09-1609--10MSPS--800mV--60sec_firmwareFlash_1_voltage-mV.csv -s 3000000
 
 REFERENCES
 https://plot.ly/python/axes/
@@ -37,14 +38,23 @@ FILE_NAME =  os.path.basename(sys.argv[0])
 HOME = os.environ['HOME']
 COMPUTE1_HOME = "/rhome/wqkhan"
 
+# Location of where the csv data is - the file has a single column with a header
 CSVDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSV"
+
+# Location of where the csv data is - the file has 3 columns for time, voltage and mean with a header row
+CSVDECIMATEDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSV_decimate"
+
+# Location of where the csv data is - the file has 3 columns for time, voltage and mean with a header row
+CSVMEANDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSVmean"
+
+# Location of where the plots are being stored
 PLOT_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/plots"
 
 def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=1000):
 
 
-    normalData = CSVDATA_DIR + "/" + os.path.basename(normalData)
-    CompareData = CSVDATA_DIR + "/" + os.path.basename(CompareData)
+    normalData = CSVDECIMATEDATA_DIR + "/" + os.path.basename(normalData)
+    CompareData = CSVDECIMATEDATA_DIR + "/" + os.path.basename(CompareData)
 
     # if either of the files do not exist - exit the function
     if (not os.path.isfile(normalData)) or (not os.path.isfile(CompareData)):
@@ -66,7 +76,7 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
     sample_periodCompare = (1 / (MSPSCompare * 10 ** 6))
 
     # Number of rows to skip to see viable data
-    skiprows = 100000000
+    skiprows = 1
 
     # Initialize a dataframe
     df = pd.DataFrame()
@@ -87,12 +97,19 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
     df['mV_Normal'] = dff_a['Voltage(mV)']
     df['mV_Compare'] = dff_b['Voltage(mV)']
 
+    # reset the index in case and use it to plot the voltage values
+    df = df.reset_index(drop=True)
+
     del dff_a, dff_b
+    sampleSize = len(df)
 
-    # Add the time column associated with each signal trace
-    df['mV_Normal_Time_s'] = [float(x) * sample_periodNormal for x in range(sampleSize)]
-    df['mV_Compare_Time_s'] = [float(x) * sample_periodCompare for x in range(sampleSize)]
+    # # Add the time column associated with each signal trace
+    # df['mV_Normal_Time_s'] = [float(x) * sample_periodNormal for x in range(sampleSize)]
+    # df['mV_Compare_Time_s'] = [float(x) * sample_periodCompare for x in range(sampleSize)]
 
+    # index the values
+    df['mV_Normal_Time_s'] = df.index
+    df['mV_Compare_Time_s'] = df.index
 
     # Stacked Subplots with a Shared X-Axis
     print("Plot interactive web graph using plotly")
@@ -117,7 +134,7 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
 
 
     layout = dict(
-        title='Normal Power Trace to Heavy Load Trace',
+        title='Normal Power Trace vs Heavy Load Trace \n{} Data Points'.format(sampleSize),
         legend=dict(
             traceorder='reversed'
         ),

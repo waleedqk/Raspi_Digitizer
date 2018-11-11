@@ -39,10 +39,101 @@ COMPUTE1_HOME = "/rhome/wqkhan"
 CSVDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSV"
 
 # Location of where the csv data is - the file has 3 columns for time, voltage and mean with a header row
+CSVDECIMATEDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSV_decimate"
+
+# Location of where the csv data is - the file has 3 columns for time, voltage and mean with a header row
 CSVMEANDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSVmean"
 
 # Location of where the plots are being stored
 PLOT_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/plots"
+
+def plot_voltage(dataFolder, plotFolder):
+    '''
+
+    :param dataFolder: The location of the csv files that have a column for voltage value recorded by the digitizer
+    :param plotFolder: The location of where the plots are to be saved
+    :return:
+    '''
+
+    csvFiles = sorted(glob.glob(dataFolder + "/*.csv"))
+
+    for csvFile in csvFiles:
+
+        # the number of samples used in drawing the plot
+        samplesToPlot = 10000000
+
+        base = os.path.basename(csvFile)
+        file_name, file_ext = os.path.splitext(base)
+
+        MSPS = int(re.search(r'\d+', base.split("--")[1]).group())
+        voltageRange = int(re.search(r'\d+', base.split("--")[2]).group())
+        sample_period=(1/(MSPS*10**6))
+
+        print("Processing: {} with: \tMSPS={} & VoltageRange={}".format(base, MSPS, voltageRange))
+
+        df = pd.read_csv(csvFile, sep=",",
+                         nrows=samplesToPlot,
+                         skiprows=range(1, 3), # after decimate the first two readings are rampimg up to the actual value so to avoid seeing the spike in the splot, those values are omitted
+                         usecols=['Voltage(mV)'],
+                         )
+
+        # 100147201 lines on decimated files
+        samplesToPlot = len(df)
+
+        (row, col) = df.shape
+        print("Number of Rows: {} and Col: {}".format(row, col))
+        columnNames = list(df.columns.values)
+        print("Data has columns: {}".format(columnNames))
+
+        # df.insert(0, 'Sample', [x for x in range(samplesToPlot)])
+
+
+        # plot only a subset of the data points
+        # the plots files are very large in size and cannot be loaded properly to view the full signal
+        df = df[:int(samplesToPlot/3)]
+
+        index = df.index
+        signal = df['Voltage(mV)']
+
+        print("Plot interactive web graph using plotly")
+
+        # Create a trace
+        trace = go.Scatter(
+            x=index,
+            y=signal,
+            mode='lines',
+            name='Voltage'
+        )
+
+        data = [trace]
+
+        layout = dict(
+            title='Power Tracing {} Data Points \nwith Voltage max peak: {}'.format(samplesToPlot, voltageRange),
+            xaxis=dict(
+                title='Index',
+                showticklabels=True,
+                tickangle=45,
+                rangeslider=dict(
+                    visible=True
+                ),
+            ),
+            yaxis = dict(
+                title='Voltage (mV)',
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                ),
+                # range=[min_signal - (abs(min_signal)*0.1), max_signal + (max_signal*0.1)],
+            )
+        )
+
+        fig = dict(data=data, layout=layout)
+
+        plotly.offline.plot(
+            fig,
+            filename=plotFolder + '/' + file_name + '_Voltage_Plot.html',
+            auto_open=False)
 
 
 def plot_time_vs_voltage(dataFolder, plotFolder):
@@ -340,6 +431,8 @@ def plot_fft_signal(dataFolder, plotFolder):
 if __name__ == '__main__':
 
     print("Starting script {}".format(FILE_NAME))
+
+    plot_voltage(dataFolder=CSVDECIMATEDATA_DIR, plotFolder=PLOT_DIR)
 
     # plot_time_vs_voltage(dataFolder=CSVDATA_DIR, plotFolder=PLOT_DIR)
 

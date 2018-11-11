@@ -28,6 +28,8 @@ CSVDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dat
 MEANDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/dataLogstoCSVmean"
 
 
+df = pd.DataFrame({'a': [1, 2],'b': [3, 4]})
+
 def RollingWindoe_Mean(dataFolder, outputFolder):
     '''
 
