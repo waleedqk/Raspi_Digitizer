@@ -4,12 +4,16 @@
 **Product Page**
 https://www.netgear.com/support/product/DGN3500.aspx
 
-## OpenWRT
+# OpenWRT
 
 The router runs the OpenWRT. OpenWrt Project is a Linux operating system targeting embedded devices.
 
 **ProjectPage**
 https://openwrt.org/
+
+## Package Manager
+
+https://oldwiki.archive.openwrt.org/doc/techref/opkg
 
 ## Firmware Update
 
@@ -19,7 +23,7 @@ https://openwrt.org/
 
 2) Since we want to do a firmware upgrade - Download the ```Firmware OpenWrt Upgrade URL``` ".bin" file that is associated with the hardware.
 
-
+https://openwrt.org/docs/guide-user/installation/sysupgrade.cli
 
 ## Upgrade The Web Portal - LuCI
 
@@ -37,7 +41,7 @@ SSH into the router:
 
 ### Offline Installation
 
-scp luci_0.11.1-1_ar71xx.ipk luci-app-firewall_0.11.1-1_ar71xx.ipk luci-i18n-english_0.11.1-1_ar71xx.ipk luci-lib-core_0.11.1-1_ar71xx.ipk luci-lib-ipkg_0.11.1-1_ar71xx.ipk luci-lib-nixio_0.11.1-1_ar71xx.ipk luci-lib-sys_0.11.1-1_ar71xx.ipk luci-lib-web_0.11.1-1_ar71xx.ipk luci-mod-admin-core_0.11.1-1_ar71xx.ipk luci-mod-admin-full_0.11.1-1_ar71xx.ipk luci-proto-core_0.11.1-1_ar71xx.ipk luci-proto-ppp_0.11.1-1_ar71xx.ipk luci-sgi-cgi_0.11.1-1_ar71xx.ipk luci-theme-base_0.11.1-1_ar71xx.ipk luci-theme-openwrt_0.11.1-1_ar71xx.ipk root@192.168.1.1:\root
+scp luci_0.11.1-1_ar71xx.ipk luci-app-firewall_0.11.1-1_ar71xx.ipk luci-i18n-english_0.11.1-1_ar71xx.ipk luci-lib-core_0.11.1-1_ar71xx.ipk luci-lib-ipkg_0.11.1-1_ar71xx.ipk luci-lib-nixio_0.11.1-1_ar71xx.ipk luci-lib-sys_0.11.1-1_ar71xx.ipk luci-lib-web_0.11.1-1_ar71xx.ipk luci-mod-admin-core_0.11.1-1_ar71xx.ipk luci-mod-admin-full_0.11.1-1_ar71xx.ipk luci-proto-core_0.11.1-1_ar71xx.ipk luci-proto-ppp_0.11.1-1_ar71xx.ipk luci-sgi-cgi_0.11.1-1_ar71xx.ipk luci-theme-base_0.11.1-1_ar71xx.ipk luci-theme-openwrt_0.11.1-1_ar71xx.ipk root@192.168.1.1:/root
 
 Install the packages in the order:
 
