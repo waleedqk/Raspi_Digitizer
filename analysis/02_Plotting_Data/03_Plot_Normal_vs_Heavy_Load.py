@@ -17,14 +17,16 @@ import matplotlib.pyplot as plt
 
 import plotly
 import plotly.plotly as py
+# from plotly.offline import py
 import plotly.graph_objs as go
 
 """
 Plot the voltage recorded from the digitizer from a no-data send trace and a heavy data send trace to see the difference in power consumption
 
 Example run:
-python3 03_Plot_Normal_vs_Heavy_Load.py -n 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV_voltage-mV_decimate_10.csv -c 2018-10-23-1029--50MSPS--800mV--Raspi_Digitizer_l4_c2_10MBmaxFlow_dualSender_voltage-mV_voltage-mV_decimate_10.csv -s 3000000 
-python3 03_Plot_Normal_vs_Heavy_Load.py -n 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV_voltage-mV_decimate_10.csv -c 2018-11-09-1609--10MSPS--800mV--60sec_firmwareFlash_1_voltage-mV.csv -s 3000000
+python3 03_Plot_Normal_vs_Heavy_Load.py -b 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV_voltage-mV_decimate_10.csv -c 2018-10-23-1029--50MSPS--800mV--Raspi_Digitizer_l4_c2_10MBmaxFlow_dualSender_voltage-mV_voltage-mV_decimate_10.csv -n 3000000 
+python3 03_Plot_Normal_vs_Heavy_Load.py -b 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV_voltage-mV_decimate_10.csv -c 2018-11-12-1615--10MSPS--800mV--flashFirmware_voltage-mV.csv -n 3000000
+python3 03_Plot_Normal_vs_Heavy_Load.py -b 2018-10-23-1016--50MSPS--800mV--Raspi_Digitizer_l1_c1_zeroTrans_allConnected_voltage-mV_voltage-mV_decimate_10.csv -c 2018-11-12-1615--10MSPS--800mV--flashFirmware_voltage-mV_voltage-mV_decimate_2.csv -n 1000000
 
 REFERENCES
 https://plot.ly/python/axes/
@@ -50,7 +52,7 @@ CSVMEANDATA_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer
 # Location of where the plots are being stored
 PLOT_DIR = HOME + "/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/plots"
 
-def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=1000):
+def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize, sampleSkip):
 
 
     normalData = CSVDECIMATEDATA_DIR + "/" + os.path.basename(normalData)
@@ -76,7 +78,7 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
     sample_periodCompare = (1 / (MSPSCompare * 10 ** 6))
 
     # Number of rows to skip to see viable data
-    skiprows = 1
+    skiprows = 800000
 
     # Initialize a dataframe
     df = pd.DataFrame()
@@ -94,8 +96,9 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
                         usecols=['Voltage(mV)'],
                      )
 
-    df['mV_Normal'] = dff_a['Voltage(mV)']
-    df['mV_Compare'] = dff_b['Voltage(mV)']
+    #  multiplied × 12  (and divided by 1000 so that it is in Watts and not milliWatts)
+    df['mV_Normal'] = dff_a['Voltage(mV)'] * (12 / 1000)
+    df['mV_Compare'] = dff_b['Voltage(mV)'] * (12 / 1000)
 
     # reset the index in case and use it to plot the voltage values
     df = df.reset_index(drop=True)
@@ -118,7 +121,7 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
         x=df['mV_Normal_Time_s'],
         y=df['mV_Normal'],
         mode='lines',
-        name='Voltage Normal Trace (mV)',
+        name='Voltage Normal Trace (W)',
         # yaxis = 'y1'
     )
 
@@ -126,7 +129,7 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
         x=df['mV_Compare_Time_s'],
         y=df['mV_Compare'],
         mode='lines',
-        name='Voltage Heavy Trace (mV)',
+        name='Voltage w Firmware Flash (W)',
         # yaxis='y2'
     )
 
@@ -134,12 +137,12 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
 
 
     layout = dict(
-        title='Normal Power Trace vs Heavy Load Trace \n{} Data Points'.format(sampleSize),
+        title='Power Trace During Normal Operation vs. During Firmware Reprogramming',
         legend=dict(
             traceorder='reversed'
         ),
         xaxis=dict(
-            title='Time(s)',
+            title='Sample (n)',
             showticklabels=True,
             tickangle=45,
             rangeslider=dict(
@@ -148,7 +151,7 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
         ),
 
         yaxis=dict(
-            title='Voltage (mV)',
+            title='Power (W)',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -162,19 +165,25 @@ def plot_normal_vs_heavy_load(normalData, CompareData, plotFolder, sampleSize=10
 
     plotly.offline.plot(
         fig,
-        filename=plotFolder + '/Normal_vs_Heavy_Load_Trace.html',
+        filename=plotFolder + '/Normal_vs_FirmwareFlash_Load_Trace.html',
         auto_open=False)
+
+    # fig.savefig(plotFolder + '/Normal_vs_FirmwareFlash_Load_Trace.png')
+
+
 
 
 def init_parser():
     parser = argparse.ArgumentParser(description="Plot Normal Power Load vs Comparative Use Power Load")
 
-    parser.add_argument('-n', '--normal-data', type=str, required=True,
-                        help="Name of normal data csv file")
+    parser.add_argument('-b', '--base-data', type=str, required=True,
+                        help="Name of base signal trace csv file")
     parser.add_argument('-c', '--compare-data', type=str, required=True,
-                        help="Name of comparison data csv file")
-    parser.add_argument('-s', '--sample-size', type=int, required=True,
-                        help="How many rows to take for the plot")
+                        help="Name of comparison signal trace csv file")
+    parser.add_argument('-s', '--skip-rows', type=int, required=False, default=800000,
+                        help="How many rows to skip before starting")
+    parser.add_argument('-n', '--num-samples', type=int, required=False, default=1000000,
+                        help="How many rows of sample to evaluate on")
 
     return parser
 
@@ -186,4 +195,4 @@ if __name__ == '__main__':
     parser = init_parser()
     args = parser.parse_args()
 
-    plot_normal_vs_heavy_load(normalData=args.normal_data, CompareData=args.compare_data, sampleSize=args.sample_size, plotFolder=PLOT_DIR)
+    plot_normal_vs_heavy_load(normalData=args.base_data, CompareData=args.compare_data, sampleSize=args.num_samples, sampleSkip=args.skip_rows, plotFolder=PLOT_DIR)

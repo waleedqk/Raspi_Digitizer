@@ -70,7 +70,7 @@ def decimatedata(dataFolder, outputFolder):
         # decimate the column values with the specified factor
         # the return value is a numpy.array
         # cast it to a pandas dataframe
-        dff = pd.DataFrame(data=scipy.signal.decimate(df['Voltage(mV)'].values, q, ftype='fir'),
+        dff = pd.DataFrame(data=scipy.signal.decimate(df['Voltage(mV)'].values, q),
                            columns=['Voltage(mV)'],
                            )
 

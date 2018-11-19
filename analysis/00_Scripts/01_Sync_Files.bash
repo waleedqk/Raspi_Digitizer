@@ -39,11 +39,12 @@ main()
 
     if [ ! -z "${TRANSMIT}" ]; then
         echo "Transmit Files to Remote System: "
-        scp -r ${MYHOME}/Documents/git/Raspi_Digitizer wqkhan@compute1.esg.uwaterloo.ca:/rhome/wqkhan/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer
+        scp -r ${MYHOME}/Dropbox/Private/dev/python/basic/git/Raspi_Digitizer wqkhan@compute1.esg.uwaterloo.ca:/rhome/wqkhan/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer
     fi
 
     if [ ! -z "${RECEIVE}" ]; then
         echo "Receive Files to Remote System: "
+        mkdir -p ${MYHOME}/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/plots
         scp -r wqkhan@compute1.esg.uwaterloo.ca:/rhome/wqkhan/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/plots/* ${MYHOME}/Documents/Experiment-Data-Dump/wqkhan_Raspi_Digitizer/plots
     fi
 
